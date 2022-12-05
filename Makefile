@@ -1,16 +1,19 @@
 CSOURCES := $(shell find . -name "*.c")
 CPPSOURCES := $(shell find . -name "*.cpp")
-CFLAGS := -Wall -Wextra -Wfloat-equal -O  -MMD -Wstrict-prototypes
+CFLAGS := -Wall -Wextra -Wfloat-equal -MMD
 
-debug: CFLAGS := $(CFLAGS) -g
-all: CFLAGS := $(CFLAGS) -g -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all
-coverage: CFLAGS := $(CFLAGS) -g -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all -fprofile-arcs -ftest-coverage
-werror: CFLAGS := $(CFLAGS) -Werror -g -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all
+debug: CXXFLAGS := $(CFLAGS) -g
+all: CXXFLAGS := $(CFLAGS) -fstack-protector-all -O3
+coverage: CXXFLAGS := $(CFLAGS) -g -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all -fprofile-arcs -ftest-coverage
+werror: CXXFLAGS := $(CFLAGS) -Werror -g -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all
 
-CXXFLAGS := $(CFLAGS)
+all: CFLAGS := $(CXXFLAGS) -Wstrict-prototypes
+debug: CFLAGS := $(CXXFLAGS) -Wstrict-prototypes
+coverage: CFLAGS := $(CXXFLAGS) -Wstrict-prototypes
+werror: CFLAGS := $(CXXFLAGS) -Wstrict-prototypes
 
 LDLIBS := -lm -lpthread -lstdc++
-all: LDFLAGS := -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all
+all: LDFLAGS := -fstack-protector-all
 coverage: LDFLAGS := -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all -fprofile-arcs -ftest-coverage
 werror: LDFLAGS := -fsanitize=address -fsanitize=leak -fsanitize=undefined -fsanitize=null -fsanitize=bounds-strict -fstack-protector-all
 
